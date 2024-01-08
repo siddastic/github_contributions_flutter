@@ -8,7 +8,8 @@ A Flutter widget to display a GitHub contributions chart. (Made for an Assignmen
 
 ## Usage
 
-Enter your GitHub username and the widget will display your contributions chart.
+Enter your GitHub username and the widget it display your contributions chart.
+You can also share it as an Image
 
 ## API
 
