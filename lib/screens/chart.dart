@@ -119,6 +119,7 @@ class _ChartScreenState extends State<ChartScreen> {
 
   void showErrorDialog() {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Error"),
@@ -131,7 +132,7 @@ class _ChartScreenState extends State<ChartScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.of(context).popUntil((route) => false);
+              Navigator.of(context).popUntil((route) => route.isFirst);
             },
             child: const Text("OK"),
           ),
