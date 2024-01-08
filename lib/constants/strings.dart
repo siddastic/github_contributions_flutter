@@ -12,3 +12,8 @@ const List<String> monthsShort = [
   "Nov",
   "Dec",
 ];
+
+class ImagePaths {
+  static const String ocat = "assets/images/ocat.png";
+  static const String loadingGif = "assets/images/loading.gif";
+}

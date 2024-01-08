@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:github_contributions/constants/colors.dart';
+import 'package:github_contributions/constants/strings.dart';
 import 'package:github_contributions/screens/chart.dart';
 import 'package:github_contributions/widgets/input.dart';
 import 'package:github_contributions/widgets/space.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const String routeName = '/home';
   const HomeScreen({super.key});
 
   @override
@@ -32,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const Space(30),
           Center(
-            child: Image.network(
-              "https://github-contributions.vercel.app/topguntocat.png",
+            child: Image.asset(
+              ImagePaths.ocat,
               height: 130,
             ),
           ),
@@ -58,6 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ElevatedButton(
             onPressed: isValidUsername
                 ? () {
+                    // Unfocus the text field
+                    FocusScope.of(context).unfocus();
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ChartScreen(
                         username: controller.text.trim(),

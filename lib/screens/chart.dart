@@ -53,8 +53,8 @@ class _ChartScreenState extends State<ChartScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.network(
-            "https://github-contributions.vercel.app/loading.gif",
+          Image.asset(
+            ImagePaths.loadingGif,
             frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
               return Container(
                 height: 160,
