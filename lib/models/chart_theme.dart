@@ -61,4 +61,17 @@ class ChartThemes {
       grade4: Color(0xffd33682),
     );
   }
+
+  static ChartTheme get leftPad {
+    return const ChartTheme(
+      backgroundColor: Color(0xff000000),
+      textColor: Color(0xffffffff),
+      meta: Color(0xff999999),
+      grade0: Color(0xff2F2F2F),
+      grade1: Color(0xff646464),
+      grade2: Color(0xffA5A5A5),
+      grade3: Color(0xffDDDDDD),
+      grade4: Color(0xffF6F6F6),
+    );
+  }
 }
