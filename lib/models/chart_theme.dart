@@ -35,4 +35,30 @@ class ChartThemes {
       grade4: Color(0xffff79c6),
     );
   }
+
+  static ChartTheme get panda {
+    return const ChartTheme(
+      backgroundColor: Color(0xff2B2C2F),
+      textColor: Color(0xffE6E6E6),
+      meta: Color(0xff676B79),
+      grade0: Color(0xff242526),
+      grade1: Color(0xff34353B),
+      grade2: Color(0xff6FC1FF),
+      grade3: Color(0xff19f9d8),
+      grade4: Color(0xffFF4B82),
+    );
+  }
+
+  static ChartTheme get solarizedDark {
+    return const ChartTheme(
+      backgroundColor: Color(0xff002b36),
+      textColor: Color(0xff93a1a1),
+      meta: Color(0xff586e75),
+      grade0: Color(0xff073642),
+      grade1: Color(0xff268bd2),
+      grade2: Color(0xff2aa198),
+      grade3: Color(0xffb58900),
+      grade4: Color(0xffd33682),
+    );
+  }
 }

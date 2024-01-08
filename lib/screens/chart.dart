@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:github_contributions/constants/colors.dart';
 import 'package:github_contributions/constants/strings.dart';
 import 'package:github_contributions/models/chart_theme.dart';
@@ -130,6 +130,13 @@ class _ChartScreenState extends State<ChartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: theme.backgroundColor,
+          systemNavigationBarColor: theme.backgroundColor,
+        ),
+      ),
       body: !isLoaded
           ? buildLoadingBody()
           : Container(
@@ -181,13 +188,19 @@ class _ChartScreenState extends State<ChartScreen> {
                       ],
                     ),
                     const Space(5),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (var col in columns[years.indexOf(y)]) col,
-                        ],
+                    RawScrollbar(
+                      thumbColor: theme.meta,
+                      thumbVisibility: true,
+                      thickness: 1,
+                      radius: const Radius.circular(10),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (var col in columns[years.indexOf(y)]) col,
+                          ],
+                        ),
                       ),
                     ),
                   ]
