@@ -80,55 +80,64 @@ class _ChartScreenState extends State<ChartScreen> {
   }
 
   void loadData() async {
-    var resp = await get(Uri.parse(
-        "https://github-contributions.vercel.app/api/v1/${widget.username}"));
-    if (resp.statusCode == 200) {
-      var json = jsonDecode(resp.body);
-      years.clear();
-      for (var item in json['years']) {
-        years.add(Year.fromJson(item));
+    try {
+      var resp = await get(Uri.parse(
+          "https://github-contributions.vercel.app/api/v1/${widget.username}"));
+      if (resp.statusCode == 200) {
+        var json = jsonDecode(resp.body);
+        years.clear();
+        for (var item in json['years']) {
+          years.add(Year.fromJson(item));
+        }
+        years.sort((a, b) => a.year.compareTo(b.year));
+        years = years.reversed.toList();
+
+        contributions.clear();
+        for (var item in json['contributions']) {
+          contributions.add(Contribution.fromJson(item));
+        }
+        contributions.sort((a, b) => a.date.compareTo(b.date));
+
+        buildColumns();
+
+        setState(() {
+          isLoaded = true;
+        });
+      } else {
+        setState(() {
+          isLoaded = true;
+        });
+        showErrorDialog();
       }
-      years.sort((a, b) => a.year.compareTo(b.year));
-      years = years.reversed.toList();
-
-      contributions.clear();
-      for (var item in json['contributions']) {
-        contributions.add(Contribution.fromJson(item));
-      }
-      contributions.sort((a, b) => a.date.compareTo(b.date));
-
-      buildColumns();
-
+    } catch (e) {
       setState(() {
         isLoaded = true;
       });
-    } else {
-      setState(() {
-        isLoaded = true;
-      });
-
-      // ignore: use_build_context_synchronously
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Error"),
-          content: Text(
-            "An error occurred while fetching your contributions. Please try again later.",
-            style: TextStyle(
-              color: theme.textColor,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
+      showErrorDialog();
     }
+  }
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Error"),
+        content: Text(
+          "An error occurred while fetching your contributions. Please try again later.",
+          style: TextStyle(
+            color: theme.textColor,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).popUntil((route) => false);
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   // TODO : Optimize this function
