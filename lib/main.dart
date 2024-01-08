@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
           seedColor: ConstantColors.primaryColor,
           primary: ConstantColors.primaryColor,
         ),
-        textTheme: GoogleFonts.urbanistTextTheme(
+        textTheme: GoogleFonts.jetBrainsMonoTextTheme(
           ThemeData.dark().textTheme,
         ),
       ),

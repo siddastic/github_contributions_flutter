@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:github_contributions/constants/colors.dart';
+import 'package:github_contributions/constants/strings.dart';
+import 'package:github_contributions/models/chart_theme.dart';
 import 'package:github_contributions/models/contribution.dart';
 import 'package:github_contributions/models/year.dart';
 import 'package:github_contributions/widgets/space.dart';
@@ -21,7 +24,9 @@ class ChartScreen extends StatefulWidget {
 class _ChartScreenState extends State<ChartScreen> {
   List<Year> years = [];
   List<Contribution> contributions = [];
+  List<List<Column>> columns = [];
   bool isLoaded = false;
+  ChartTheme theme = ChartThemes.dracula;
   @override
   void initState() {
     loadData();
@@ -71,16 +76,55 @@ class _ChartScreenState extends State<ChartScreen> {
       for (var item in json['years']) {
         years.add(Year.fromJson(item));
       }
+      years.sort((a, b) => a.year.compareTo(b.year));
+      years = years.reversed.toList();
 
       contributions.clear();
       for (var item in json['contributions']) {
         contributions.add(Contribution.fromJson(item));
       }
+      contributions.sort((a, b) => a.date.compareTo(b.date));
+
+      buildColumns();
 
       setState(() {
         isLoaded = true;
       });
     }
+  }
+
+  // TODO : Optimize this function
+  void buildColumns() {
+    columns.clear();
+    for (var y in years) {
+      var currentYear = getContributionsForYear(y.year);
+      var currentColumns = <Column>[];
+      var curr = 0;
+      for (var col = 0; col < 53; col++) {
+        var children = <Widget>[];
+        for (var row = 0; row < 7; row++) {
+          if (curr >= currentYear.length) {
+            break;
+          }
+          children.add(ContributionBox(
+            theme: theme,
+            c: currentYear[curr],
+          ));
+          curr++;
+        }
+        currentColumns.add(Column(
+          children: children,
+        ));
+      }
+      columns.add(currentColumns);
+    }
+  }
+
+  List<Contribution> getContributionsForYear(int year) {
+    var currentYear =
+        contributions.where((element) => element.date.year == year).toList();
+    currentYear.sort((a, b) => a.date.compareTo(b.date));
+    return currentYear;
   }
 
   @override
@@ -89,30 +133,90 @@ class _ChartScreenState extends State<ChartScreen> {
       body: !isLoaded
           ? buildLoadingBody()
           : Container(
-              color: Color(0xff181818),
+              color: theme.backgroundColor,
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
+                  Space(MediaQuery.of(context).padding.top + 16),
                   Text(
                     "@${widget.username}'s Contributions",
-                    style: const TextStyle(
-                      color: ConstantColors.textColor,
-                      fontSize: 30,
+                    style: TextStyle(
+                      color: theme.textColor,
+                      fontSize: 20,
                     ),
                   ),
                   Space.def,
                   Text(
                     "Total Contributions: ${contributions.fold<int>(0, (p, c) => p + c.count)}",
-                    style: const TextStyle(
-                      color: ConstantColors.textColor,
+                    style: TextStyle(
+                      color: theme.textColor,
                       fontSize: 10,
                     ),
                   ),
+                  Divider(
+                    color: ChartThemes.dracula.meta,
+                  ),
+                  for (var y in years) ...[
+                    Text(
+                      "${y.year} : ${y.total} Contributions${y.year == DateTime.now().year ? " (so far)" : ""}",
+                      style: TextStyle(
+                        color: theme.textColor,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const Space(5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        for (var m in monthsShort)
+                          Text(
+                            m,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: theme.meta,
+                              fontSize: 10,
+                            ),
+                          ),
+                      ],
+                    ),
+                    const Space(5),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (var col in columns[years.indexOf(y)]) col,
+                        ],
+                      ),
+                    ),
+                  ]
                 ],
               ),
             ),
+    );
+  }
+}
+
+class ContributionBox extends StatelessWidget {
+  final ChartTheme theme;
+  final Contribution c;
+  const ContributionBox({
+    super.key,
+    required this.theme,
+    required this.c,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 5,
+      height: 5,
+      margin: const EdgeInsets.all(1),
+      decoration: BoxDecoration(
+        color: c.getColorForChartTheme(theme),
+        borderRadius: BorderRadius.circular(2),
+      ),
     );
   }
 }
