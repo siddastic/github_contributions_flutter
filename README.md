@@ -1,16 +1,11 @@
-# github_contributions
+# Github Contributions Flutter
 
-A new Flutter project.
+Heavily Inspired by [github-contributions-chart](https://github.com/sallar/github-contributions-chart)
 
-## Getting Started
+A Flutter widget to display a GitHub contributions chart. (Made for an Assignment)
 
-This project is a starting point for a Flutter application.
+## Usage
 
-A few resources to get you started if this is your first Flutter project:
+Enter your GitHub username and the widget will display your contributions chart.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Demo App
