@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:github_contributions/constants/colors.dart';
+import 'package:github_contributions/screens/chart.dart';
 import 'package:github_contributions/widgets/input.dart';
 import 'package:github_contributions/widgets/space.dart';
 
@@ -15,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController controller = TextEditingController();
 
-  bool get isValidUsername => controller.text.isNotEmpty;
+  bool get isValidUsername => controller.text.trim().isNotEmpty;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,11 +56,18 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Space.def,
           ElevatedButton(
-            onPressed: () {},
+            onPressed: isValidUsername
+                ? () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ChartScreen(
+                        username: controller.text.trim(),
+                      ),
+                    ));
+                  }
+                : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: !isValidUsername
-                  ? ConstantColors.buttonDisabled
-                  : Theme.of(context).colorScheme.primary,
+              disabledBackgroundColor: ConstantColors.buttonDisabled,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               padding: const EdgeInsets.symmetric(vertical: 15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
